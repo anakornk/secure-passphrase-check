@@ -3,7 +3,7 @@ pragma solidity >= 0.4.0;
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-contract SecureSecretCheck {
+contract SecurePassphraseCheck {
     
     address public winner;
     address public answerAddress;
