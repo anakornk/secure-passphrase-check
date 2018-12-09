@@ -1,2 +1,9 @@
 {
+    "solidity.packageDefaultDependenciesContractsDirectory": "",
+    "solidity.packageDefaultDependenciesDirectory": "node_modules",
+    "solidity.linter": "solium",
+    "solidity.soliumRules": {
+        "quotes": ["error", "double"],
+        "indentation": ["error", 4]
+    },
 }
