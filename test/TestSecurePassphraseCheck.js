@@ -4,6 +4,7 @@ const BN = require('bn.js');
 
 contract('SecurePassphraseCheck', function(accounts) {
   var testAccount = accounts[0];
+  var question = 'whatismyname?'
   var answer = 'mynameistata';
   var answerPrivateKey = web3.utils.keccak256(answer);
   var answerAddress = web3.eth.accounts.privateKeyToAccount(answerPrivateKey).address;
@@ -18,11 +19,11 @@ contract('SecurePassphraseCheck', function(accounts) {
 
   it("should add question correctly", async function() {
     let instance = await SecurePassphraseCheck.deployed();
-    await instance.newQuestion('0x12', answerAddress, accounts[0], {from: testAccount})
+    await instance.newQuestion(web3.utils.fromAscii(question), answerAddress, accounts[0], {from: testAccount})
     let qId = await instance.numQuestions();
     qId--;
     let res = await instance.getQuestion(qId);
-    assert.strictEqual(res.questionText, '0x1200000000000000000000000000000000000000000000000000000000000000');
+    assert.equal(web3.utils.toAscii(res.questionText).replace(/\0/g, ''), question);
     assert.strictEqual(res.answerAddress, answerAddress);
     assert.strictEqual(res.winner, '0x0000000000000000000000000000000000000000');
   });

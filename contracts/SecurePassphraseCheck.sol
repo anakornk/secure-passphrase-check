@@ -14,7 +14,7 @@ contract SecurePassphraseCheck {
     uint public numQuestions;
     mapping ( uint => Question ) questions;
     mapping( address => uint[] ) addressToQids;
-    event Log(uint8 code);
+    event Log(uint8 code, address user);
 
     function newQuestion(bytes32 _questionText, address _answerAddress, address _erc20TokenContractAddress) public returns (uint qId){
         qId = numQuestions++;
@@ -36,7 +36,7 @@ contract SecurePassphraseCheck {
     function submit(uint _qId, bytes _signature) public noWinner(_qId) {
         require(checkAnswer(_qId, _signature), "Incorrect Secret");
         questions[_qId].winner = msg.sender;
-        emit Log(0);
+        emit Log(0, msg.sender);
     }
 
     modifier noWinner(uint _qId) {
@@ -52,7 +52,7 @@ contract SecurePassphraseCheck {
         require(isWinner(_qId), "You are not the winner");
         // transfer prize
         questions[_qId].erc20TokenContract.transfer(msg.sender, getPrize(_qId));
-        emit Log(1);
+        emit Log(1, msg.sender);
 
     }
 
