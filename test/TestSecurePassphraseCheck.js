@@ -47,7 +47,7 @@ contract('SecurePassphraseCheck', function(accounts) {
     assert.strictEqual(check, true);
   });
 
-  it("if already have winner, should revert", async function() {
+  it("should revert if there is already a winner", async function() {
     let instance = await SecurePassphraseCheck.deployed();
     let qId = (await instance.numQuestions()) - 1;
     try {
