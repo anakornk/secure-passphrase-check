@@ -1,8 +1,11 @@
 pragma solidity >= 0.4.0;
 
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract SecurePassphraseCheck {
+    using SafeMath for uint;
+
     struct Question {
         bytes32 questionText;
         address answerAddress;
@@ -19,7 +22,8 @@ contract SecurePassphraseCheck {
     }
 
     function newQuestion(bytes32 _questionText, address _answerAddress) public returns (uint qId) {
-        qId = numQuestions++;
+        qId = numQuestions;
+        numQuestions = numQuestions.add(1);
         questions[qId] = Question(_questionText, _answerAddress, address(0x0));
         addressToQids[msg.sender].push(qId);
     }
