@@ -38,4 +38,24 @@ contract('SecurePassphraseCheck', function(accounts) {
     let check2 = await instance.checkAnswer.call(qId, '0x6dedb72af469c493eeb274d19c0ff9a4d9ffc26e783276d5b6d297badebec83a70d920d26bb3702d8c2d9e74dbc1a36e65ed234831b0c29cec7f4f480eb224d71c', {from: testAccount})
     assert.strictEqual(check2, false);
   });
+
+  it("should update winner correctly", async function() {
+    let instance = await SecurePassphraseCheck.deployed();
+    let qId = (await instance.numQuestions()) - 1;
+    await instance.submit(qId, signature, {from: testAccount});
+    let check = await instance.isWinner.call(qId, testAccount, {from: testAccount});
+    assert.strictEqual(check, true);
+  });
+
+  it("if already have winner, should revert", async function() {
+    let instance = await SecurePassphraseCheck.deployed();
+    let qId = (await instance.numQuestions()) - 1;
+    try {
+        await instance.submit(qId, signature, {from: testAccount});
+        assert.fail();
+    } catch (err) {
+      assert.ok(/revert/.test(err.message));
+    }
+
+  });
 });
