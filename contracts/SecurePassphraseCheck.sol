@@ -12,7 +12,7 @@ contract SecurePassphraseCheck {
     uint public numQuestions;
     mapping ( uint => Question ) questions;
     mapping( address => uint[] ) addressToQids;
-    event Log(uint8 code, uint qId, address user);
+    event Log(uint qId, address user);
 
     function newQuestion(bytes32 _questionText, address _answerAddress) public returns (uint qId){
         qId = numQuestions++;
@@ -34,7 +34,7 @@ contract SecurePassphraseCheck {
     function submit(uint _qId, bytes _signature) public noWinner(_qId) {
         require(checkAnswer(_qId, _signature), "Incorrect Secret");
         questions[_qId].winner = msg.sender;
-        emit Log(0, _qId, msg.sender);
+        emit Log(_qId, msg.sender);
     }
 
     modifier noWinner(uint _qId) {
