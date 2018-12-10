@@ -1,4 +1,5 @@
 var SecurePassphraseCheck = artifacts.require("./SecurePassphraseCheck.sol");
+var BasicToken = artifacts.require("./BasicToken.sol");
 const BN = require('bn.js');
 
 
@@ -19,13 +20,15 @@ contract('SecurePassphraseCheck', function(accounts) {
 
   it("should add question correctly", async function() {
     let instance = await SecurePassphraseCheck.deployed();
-    await instance.newQuestion(web3.utils.fromAscii(question), answerAddress, accounts[0], {from: testAccount})
-    let qId = await instance.numQuestions();
-    qId--;
+    let erc20TokenContract = await BasicToken.deployed();
+    
+    await instance.newQuestion(web3.utils.fromAscii(question), answerAddress, erc20TokenContract.address, {from: testAccount})
+    let qId = (await instance.numQuestions()) - 1; // get last question_id
     let res = await instance.getQuestion(qId);
     assert.equal(web3.utils.toAscii(res.questionText).replace(/\0/g, ''), question);
     assert.strictEqual(res.answerAddress, answerAddress);
     assert.strictEqual(res.winner, '0x0000000000000000000000000000000000000000');
+    assert.strictEqual(res.erc20TokenContract, erc20TokenContract.address);
   });
 
   it("should check passphrase correctly", async function() {

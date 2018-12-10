@@ -22,9 +22,14 @@ contract SecurePassphraseCheck {
         addressToQids[msg.sender].push(qId);
     }
 
-    function getQuestion(uint _qId) public view returns (bytes32 questionText, address answerAddress, address winner) {
+    function getQuestion(uint _qId) public view returns (
+        bytes32 questionText, 
+        address answerAddress, 
+        address winner, 
+        address erc20TokenContract
+        ) {
         Question storage question = questions[_qId];
-        return (question.questionText, question.answerAddress, question.winner);
+        return (question.questionText, question.answerAddress, question.winner, address(question.erc20TokenContract));
     }
 
     function checkAnswer(uint _qId, bytes _signature) public view returns (bool) {
