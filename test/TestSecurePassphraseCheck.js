@@ -18,15 +18,21 @@ contract('SecurePassphraseCheck', function(accounts) {
 
   it("should add question correctly", async function() {
     let instance = await SecurePassphraseCheck.deployed();
-    await instance.addQuestion(answerAddress, accounts[0], {from: testAccount})
-    let res = await instance.answerAddress.call();
-    assert.strictEqual(res, answerAddress);
+    await instance.newQuestion('0x12', answerAddress, accounts[0], {from: testAccount})
+    let qId = await instance.numQuestions();
+    qId--;
+    let res = await instance.getQuestion(qId);
+    assert.strictEqual(res.questionText, '0x1200000000000000000000000000000000000000000000000000000000000000');
+    assert.strictEqual(res.answerAddress, answerAddress);
+    assert.strictEqual(res.winner, '0x0000000000000000000000000000000000000000');
   });
+
   it("should check passphrase correctly", async function() {
     let instance = await SecurePassphraseCheck.deployed();
-    let check1 = await instance.checkAnswer.call(signature, {from: testAccount})
+    let qId = (await instance.numQuestions()) - 1;
+    let check1 = await instance.checkAnswer.call(qId, signature, {from: testAccount})
     assert.strictEqual(check1, true);
-    let check2 = await instance.checkAnswer.call('0x6dedb72af469c493eeb274d19c0ff9a4d9ffc26e783276d5b6d297badebec83a70d920d26bb3702d8c2d9e74dbc1a36e65ed234831b0c29cec7f4f480eb224d71c', {from: testAccount})
+    let check2 = await instance.checkAnswer.call(qId, '0x6dedb72af469c493eeb274d19c0ff9a4d9ffc26e783276d5b6d297badebec83a70d920d26bb3702d8c2d9e74dbc1a36e65ed234831b0c29cec7f4f480eb224d71c', {from: testAccount})
     assert.strictEqual(check2, false);
   });
 });
