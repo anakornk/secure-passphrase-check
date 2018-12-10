@@ -14,7 +14,11 @@ contract SecurePassphraseCheck {
     mapping( address => uint[] ) addressToQids;
     event Log(uint qId, address user);
 
-    function newQuestion(bytes32 _questionText, address _answerAddress) public returns (uint qId){
+    function getQids(address _address) public view returns (uint[] qids) {
+        return addressToQids[_address];
+    }
+
+    function newQuestion(bytes32 _questionText, address _answerAddress) public returns (uint qId) {
         qId = numQuestions++;
         questions[qId] = Question(_questionText, _answerAddress, address(0x0));
         addressToQids[msg.sender].push(qId);

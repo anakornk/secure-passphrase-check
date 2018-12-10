@@ -28,6 +28,10 @@ contract('SecurePassphraseCheck', function(accounts) {
     assert.equal(web3.utils.toAscii(res.questionText).replace(/\0/g, ''), question);
     assert.strictEqual(res.answerAddress, answerAddress);
     assert.strictEqual(res.winner, '0x0000000000000000000000000000000000000000');
+
+    let qids = await instance.getQids.call(testAccount, {from: testAccount});
+    assert.equal(qids.length, 1);
+    assert.equal(qids[0].toString(10), '0');
   });
 
   it("should check passphrase correctly", async function() {
