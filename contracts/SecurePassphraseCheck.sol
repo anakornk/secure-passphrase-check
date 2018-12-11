@@ -41,7 +41,8 @@ contract SecurePassphraseCheck {
         return condition;
     }
 
-    function submit(uint _qId, bytes _signature) public noWinner(_qId) {
+    function submit(uint _qId, bytes _signature) public {
+        require(notFull(_qId), "Reached maximum amount of winners");
         require(checkAnswer(_qId, _signature), "Incorrect Secret");
         Question storage question = questions[_qId];
         question.isWinner[msg.sender] = true;
@@ -49,9 +50,8 @@ contract SecurePassphraseCheck {
         emit Log(_qId, msg.sender);
     }
 
-    modifier noWinner(uint _qId) {
-        require(questions[_qId].numWinners < questions[_qId].maxWinner, "There is already a winner");
-        _;
+    function notFull(uint _qId) public view returns (bool){
+        return questions[_qId].numWinners < questions[_qId].maxWinner;
     }
 
     function isWinner(uint _qId, address _address) public view returns (bool) {
