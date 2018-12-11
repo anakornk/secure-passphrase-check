@@ -1,3 +1,4 @@
+import React from 'react'
 class App extends React.Component {
     constructor(props) {
       super(props);
@@ -17,5 +18,4 @@ class App extends React.Component {
     }
   }
 
-  const domContainer = document.querySelector('#container');
-  ReactDOM.render(<App/>, domContainer);
+  export default App;
