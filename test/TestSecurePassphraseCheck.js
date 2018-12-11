@@ -20,12 +20,11 @@ contract('Test SecurePassphraseCheck', function(accounts) {
   it("should add question correctly", async function() {
     let instance = await SecurePassphraseCheck.deployed();
     
-    await instance.newQuestion(web3.utils.fromAscii(question), answerAddress, {from: testAccount})
+    await instance.newQuestion(web3.utils.fromAscii(question), answerAddress, 1, {from: testAccount})
     let qId = (await instance.numQuestions()) - 1; // get last question_id
     let res = await instance.getQuestion(qId);
     assert.equal(web3.utils.toAscii(res.questionText).replace(/\0/g, ''), question);
     assert.strictEqual(res.answerAddress, answerAddress);
-    assert.strictEqual(res.winner, '0x0000000000000000000000000000000000000000');
 
     let qids = await instance.getQids.call(testAccount, {from: testAccount});
     assert.equal(qids.length, 1);

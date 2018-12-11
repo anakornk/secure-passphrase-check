@@ -9,7 +9,9 @@ contract SecurePassphraseCheck {
     struct Question {
         bytes32 questionText;
         address answerAddress;
-        address winner;
+        uint maxWinner;
+        uint numWinners;
+        mapping ( address => bool ) isWinner;
     }
 
     uint public numQuestions;
@@ -21,16 +23,16 @@ contract SecurePassphraseCheck {
         return addressToQids[_address];
     }
 
-    function newQuestion(bytes32 _questionText, address _answerAddress) public returns (uint qId) {
+    function newQuestion(bytes32 _questionText, address _answerAddress, uint _maxWinner) public returns (uint qId) {
         qId = numQuestions;
         numQuestions = numQuestions.add(1);
-        questions[qId] = Question(_questionText, _answerAddress, address(0x0));
+        questions[qId] = Question(_questionText, _answerAddress, _maxWinner, 0);
         addressToQids[msg.sender].push(qId);
     }
 
-    function getQuestion(uint _qId) public view returns (bytes32 questionText, address answerAddress, address winner) {
+    function getQuestion(uint _qId) public view returns (bytes32 questionText, address answerAddress) {
         Question storage question = questions[_qId];
-        return (question.questionText, question.answerAddress, question.winner);
+        return (question.questionText, question.answerAddress);
     }
 
     function checkAnswer(uint _qId, bytes _signature) public view returns (bool) {
@@ -41,16 +43,18 @@ contract SecurePassphraseCheck {
 
     function submit(uint _qId, bytes _signature) public noWinner(_qId) {
         require(checkAnswer(_qId, _signature), "Incorrect Secret");
-        questions[_qId].winner = msg.sender;
+        Question storage question = questions[_qId];
+        question.isWinner[msg.sender] = true;
+        question.numWinners = question.numWinners.add(1);
         emit Log(_qId, msg.sender);
     }
 
     modifier noWinner(uint _qId) {
-        require(questions[_qId].winner == address(0x0), "There is already a winner");
+        require(questions[_qId].numWinners < questions[_qId].maxWinner, "There is already a winner");
         _;
     }
 
     function isWinner(uint _qId, address _address) public view returns (bool) {
-        return questions[_qId].winner == _address;
+        return questions[_qId].isWinner[_address];
     }
 }

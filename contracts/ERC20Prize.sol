@@ -15,7 +15,7 @@ contract ERC20Prize {
     constructor(address _spcContractAddress, address _erc20TokenContractAddress, bytes32 _questionText, address _answerAddress) public {
         spcContract = SecurePassphraseCheck(_spcContractAddress);
         erc20TokenContract = IERC20(_erc20TokenContractAddress);
-        qId = spcContract.newQuestion(_questionText, _answerAddress);
+        qId = spcContract.newQuestion(_questionText, _answerAddress, 1);
     }
 
     function claim() public {
