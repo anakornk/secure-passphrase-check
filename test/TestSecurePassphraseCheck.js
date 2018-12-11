@@ -1,9 +1,8 @@
 var SecurePassphraseCheck = artifacts.require("./SecurePassphraseCheck.sol");
-var BasicToken = artifacts.require("./BasicToken.sol");
 const BN = require('bn.js');
 
 
-contract('SecurePassphraseCheck', function(accounts) {
+contract('Test SecurePassphraseCheck', function(accounts) {
   var testAccount = accounts[0];
   var question = 'whatismyname?'
   var answer = 'mynameistata';
@@ -20,7 +19,6 @@ contract('SecurePassphraseCheck', function(accounts) {
 
   it("should add question correctly", async function() {
     let instance = await SecurePassphraseCheck.deployed();
-    let erc20TokenContract = await BasicToken.deployed();
     
     await instance.newQuestion(web3.utils.fromAscii(question), answerAddress, {from: testAccount})
     let qId = (await instance.numQuestions()) - 1; // get last question_id
@@ -31,7 +29,6 @@ contract('SecurePassphraseCheck', function(accounts) {
 
     let qids = await instance.getQids.call(testAccount, {from: testAccount});
     assert.equal(qids.length, 1);
-    assert.equal(qids[0].toString(10), '0');
   });
 
   it("should check passphrase correctly", async function() {

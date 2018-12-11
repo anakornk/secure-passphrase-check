@@ -3,16 +3,16 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./SecurePassphraseCheck.sol";
 
 contract ERC20Prize {
-    IERC20 public erc20TokenContract;
     SecurePassphraseCheck public spcContract;
+    IERC20 public erc20TokenContract;
     uint public qId;
 
     event Claim(address winner, uint prizeValue);
 
-    constructor(address _spcContractAddress, address _erc20TokenContractAddress, uint _qId) public {
+    constructor(address _spcContractAddress, address _erc20TokenContractAddress, bytes32 _questionText, address _answerAddress) public {
         spcContract = SecurePassphraseCheck(_spcContractAddress);
         erc20TokenContract = IERC20(_erc20TokenContractAddress);
-        qId = _qId;
+        qId = spcContract.newQuestion(_questionText, _answerAddress);
     }
 
     function claim() public {
