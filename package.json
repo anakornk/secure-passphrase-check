@@ -1,19 +1,35 @@
 {
   "name": "secure-passphrase-check",
   "version": "1.0.0",
-  "description": "",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2",
     "bn.js": "^4.11.8",
     "openzeppelin-solidity": "^2.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "lite-server": "^2.4.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile-jsx": "npx babel src --out-dir dist --presets react-app/prod",
+    "watch-jsx": "npx babel --watch src --out-dir dist --presets react-app/prod",
+    "start": "lite-server dist"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anakornk/secure-passphrase-check.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/anakornk/secure-passphrase-check/issues"
+  },
+  "homepage": "https://github.com/anakornk/secure-passphrase-check#readme",
+  "description": ""
 }
