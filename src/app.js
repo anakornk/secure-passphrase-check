@@ -7,7 +7,7 @@ class App extends React.Component {
     constructor(props) {
       super(props);
       this.state = { loading: true };
-      this.web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+      this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
       this.web3.eth.getAccounts().then((accounts) => {
         this.setState({
           loading: !(accounts.length > 0 )
@@ -17,7 +17,7 @@ class App extends React.Component {
     }
 
     setupContracts() {
-      this.scpContracct = new web3.eth.Contract(scpContractABI, config.spcContractAddress);
+      this.scpContracct = new this.web3.eth.Contract(scpContractABI, config.spcContractAddress);
       // console.log(this.scpContracct.)
     }
   
