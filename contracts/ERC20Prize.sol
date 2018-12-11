@@ -26,4 +26,8 @@ contract ERC20Prize {
     function getPrize() public view returns (uint) {
         return erc20TokenContract.balanceOf(this);
     }
+
+    function getSPCContractAddress() public view returns (address spcContractAddress) {
+        return address(spcContract);
+    }
 }
