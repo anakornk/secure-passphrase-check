@@ -1,8 +1,11 @@
 pragma solidity >= 0.4.0;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "./SecurePassphraseCheck.sol";
 
 contract ERC20Prize {
+    using SafeERC20 for IERC20;
+
     SecurePassphraseCheck public spcContract;
     IERC20 public erc20TokenContract;
     uint public qId;
@@ -17,9 +20,9 @@ contract ERC20Prize {
 
     function claim() public {
         require(spcContract.isWinner(qId, msg.sender), "You are not the winner");
-        // transfer prize
+        // safe transfer prize
         uint prizeValue = getPrize();
-        erc20TokenContract.transfer(msg.sender, prizeValue);
+        erc20TokenContract.safeTransfer(msg.sender, prizeValue);
         emit Claim(msg.sender, prizeValue);
     }
 
