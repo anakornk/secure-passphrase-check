@@ -37,16 +37,14 @@ contract('ERC20Prize', function(accounts) {
         assert.fail();
     } catch (err) {
         assert.ok(/revert/.test(err.message));
-    }
-    // let scpContract = await SecurePassphraseCheck.deployed();
-    // let qId = await instance.qId.call({from: testAccount});
-    
+    }    
   });
 
   it("should be able to claim prize if is the winner", async function() {
     let instance = await ERC20Prize.deployed();
     let scpContract = await SecurePassphraseCheck.deployed();
     let qId = await instance.qId.call({from: testAccount});
+    
     await scpContract.submit(qId, signature);
     await instance.claim({from: testAccount});
     let prizeValue = await instance.getPrize.call({from: testAccount});
