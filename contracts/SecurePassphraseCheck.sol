@@ -30,9 +30,9 @@ contract SecurePassphraseCheck {
         addressToQids[msg.sender].push(qId);
     }
 
-    function getQuestion(uint _qId) public view returns (bytes32 questionText, address answerAddress) {
+    function getQuestion(uint _qId) public view returns (bytes32 questionText, address answerAddress, uint maxWinners, uint numWinners) {
         Question storage question = questions[_qId];
-        return (question.questionText, question.answerAddress);
+        return (question.questionText, question.answerAddress, question.maxWinner, question.numWinners);
     }
 
     function checkAnswer(uint _qId, bytes _signature) public view returns (bool) {

@@ -2,11 +2,10 @@ import React from 'react';
 import Web3 from 'web3';
 import config from './config.js';
 import { abi as spcContractABI } from '../build/contracts/SecurePassphraseCheck.json';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
-const Index = () => <h2>Home</h2>;
-const About = () => <h2>About</h2>;
-const Users = () => <h2>Users</h2>;
+import HomePage from './HomePage';
+import NewPage from './NewPage';
+import QuestionPage from './QuestionPage';
+import queryString from 'query-string';
 
 class App extends React.Component {
     constructor(props) {
@@ -34,28 +33,31 @@ class App extends React.Component {
       if (this.state.loading) {
         return <p>Loading..</p>;
       }
-      
+
+      let params = queryString.parseUrl(window.location.href).query;
+      console.log(params);
+      let page;
+      if(params.page == "new"){
+        page = <NewPage spcContract={this.spcContract}/>
+      } else if(params.page == "question" && parseInt(params.qid) >= 0) {
+        page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} />
+      } else {
+        page = <HomePage spcContract={this.spcContract}/>
+      }
       return (
-        <Router>
-          <div>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/about/">About</Link>
-                </li>
-                <li>
-                  <Link to="/users/">Users</Link>
-                </li>
-              </ul>
-            </nav>
-            <Route path="/" exact component={Index} />
-            <Route path="/about/" component={About} />
-            <Route path="/users/" component={Users} />
-          </div>
-        </Router>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <a href="/?page=home">Home</a>
+              </li>
+              <li>
+                <a href="/?page=new">New</a>
+              </li>
+            </ul>
+          </nav>
+          { page }
+        </div>
       );
     }
   }
