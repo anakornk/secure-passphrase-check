@@ -15,7 +15,7 @@ class App extends React.Component {
       this.web3.eth.getAccounts().then((accounts) => {
         this.setState({
           loading: !(accounts.length > 0 ),
-          accounts
+          account: accounts[0]
         });
       });
       this.setupContracts();
@@ -40,7 +40,7 @@ class App extends React.Component {
       if(params.page == "new"){
         page = <NewPage spcContract={this.spcContract}/>
       } else if(params.page == "question" && parseInt(params.qid) >= 0) {
-        page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} />
+        page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} account={this.state.account}/>
       } else {
         page = <HomePage spcContract={this.spcContract}/>
       }

@@ -1,5 +1,4 @@
 import React from 'react';
-
 class QuestionPage extends React.Component {
     constructor(props) {
         super(props);
@@ -22,7 +21,15 @@ class QuestionPage extends React.Component {
     }
 
     submit(){
-        console.log("submit" + this.state.textValue);
+        var answer = this.state.textValue;
+        var web3 = this.props.web3;
+        var answerPrivateKey = web3.utils.keccak256(answer);
+        var a = new web3.utils.BN(this.props.account.substr(2), 16);
+        var { signature } = web3.eth.accounts.sign(a.toBuffer(), answerPrivateKey);
+        this.props.spcContract.methods.checkAnswer(this.props.qid, signature).call({from: this.props.account}).then((res) => {
+            console.log(res);
+        });
+        
     }
 
     handleChange(event) {

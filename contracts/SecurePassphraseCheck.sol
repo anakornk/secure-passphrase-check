@@ -11,6 +11,7 @@ contract SecurePassphraseCheck {
         address answerAddress;
         uint maxWinner;
         uint numWinners;
+        address[] winners;
         mapping ( address => bool ) isWinner;
     }
 
@@ -26,7 +27,8 @@ contract SecurePassphraseCheck {
     function newQuestion(bytes32 _questionText, address _answerAddress, uint _maxWinner) public returns (uint qId) {
         qId = numQuestions;
         numQuestions = numQuestions.add(1);
-        questions[qId] = Question(_questionText, _answerAddress, _maxWinner, 0);
+        // check last param, gas
+        questions[qId] = Question(_questionText, _answerAddress, _maxWinner, 0, new address[](0));
         addressToQids[msg.sender].push(qId);
     }
 
@@ -47,6 +49,8 @@ contract SecurePassphraseCheck {
         Question storage question = questions[_qId];
         question.isWinner[msg.sender] = true;
         question.numWinners = question.numWinners.add(1);
+        question.winners.push(msg.sender);
+        // should not allow duplicate winner
         emit Log(_qId, msg.sender);
     }
 
