@@ -42,7 +42,7 @@ class App extends React.Component {
       } else if(params.page == "question" && parseInt(params.qid) >= 0) {
         page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} account={this.state.account}/>
       } else {
-        page = <HomePage spcContract={this.spcContract}/>
+        page = <HomePage web3={this.web3} spcContract={this.spcContract}/>
       }
       return (
         <div>
