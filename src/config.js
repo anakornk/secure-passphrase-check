@@ -1,5 +1,5 @@
 const config =  {
-    spcContractAddress: '0x90D89B49e1F629695E28369b9E272a1ec4a67313'
+    spcContractAddress: '0x6FB98892faf68888560A2f350c0466970fA2343e'
 };
 
 export default config;

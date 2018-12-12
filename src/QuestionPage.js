@@ -63,6 +63,7 @@ class QuestionPage extends React.Component {
                 <p>{this.props.web3.utils.toAscii(this.state.question.questionText)}</p>
                 <p>{this.state.question.answerAddress}</p>
                 <p>{this.state.question.numWinners} / {this.state.question.maxWinners}</p>
+                <p>{this.state.question.winners}</p>
                 <input type="text" value={this.state.textValue} onChange={this.handleChange} />
                 <button onClick={this.submit} >Submit</button>
             </div>
