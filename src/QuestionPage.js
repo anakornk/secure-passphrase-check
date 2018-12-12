@@ -26,8 +26,24 @@ class QuestionPage extends React.Component {
         var answerPrivateKey = web3.utils.keccak256(answer);
         var a = new web3.utils.BN(this.props.account.substr(2), 16);
         var { signature } = web3.eth.accounts.sign(a.toBuffer(), answerPrivateKey);
-        this.props.spcContract.methods.checkAnswer(this.props.qid, signature).call({from: this.props.account}).then((res) => {
+        this.props.spcContract.methods.checkAnswer(this.props.qid, signature).call({from: this.props.account})
+        .then((res) => {
             console.log(res);
+
+            if(res) {
+                this.props.spcContract.methods.submit(this.props.qid, signature)
+                .send({from: this.props.account})
+                .on('transactionHash', function(hash){
+                    console.log(hash)
+                })
+                .on('receipt', function(receipt){
+                    console.log(receipt);
+                })
+                .on('confirmation', function(confirmationNumber, receipt){
+                    console.log(confirmationNumber, receipt);
+                })
+                .on('error', console.error);
+            }
         });
         
     }

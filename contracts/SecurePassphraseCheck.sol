@@ -32,9 +32,14 @@ contract SecurePassphraseCheck {
         addressToQids[msg.sender].push(qId);
     }
 
-    function getQuestion(uint _qId) public view returns (bytes32 questionText, address answerAddress, uint maxWinners, uint numWinners) {
+    function getQuestion(uint _qId) public view returns (
+        bytes32 questionText, 
+        address answerAddress, 
+        uint maxWinners, 
+        uint numWinners, 
+        address[] winners) {
         Question storage question = questions[_qId];
-        return (question.questionText, question.answerAddress, question.maxWinner, question.numWinners);
+        return (question.questionText, question.answerAddress, question.maxWinner, question.numWinners, question.winners);
     }
 
     function checkAnswer(uint _qId, bytes _signature) public view returns (bool) {
@@ -44,6 +49,7 @@ contract SecurePassphraseCheck {
     }
 
     function submit(uint _qId, bytes _signature) public {
+        require(isWinner(_qId, msg.sender) == false, "Already is winner");
         require(notFull(_qId), "Reached maximum amount of winners");
         require(checkAnswer(_qId, _signature), "Incorrect Secret");
         Question storage question = questions[_qId];
@@ -60,5 +66,20 @@ contract SecurePassphraseCheck {
 
     function isWinner(uint _qId, address _address) public view returns (bool) {
         return questions[_qId].isWinner[_address];
+    }
+
+    function getQuestionsFromRange(uint from, uint to) public view returns (uint[] qids, bytes32[] questionsText) {
+        // memory or storage?
+        require(to >= from, "to should be larger than from");
+        uint len = to - from + 1;
+        uint[] memory tempQids = new uint[](len);
+        bytes32[] memory tempQuestionsText = new bytes32[](len);
+        uint j = 0;
+        for(uint i = from; i <= to; i++ ){
+            tempQids[j] = i;
+            tempQuestionsText[j] = questions[i].questionText;
+            j++;
+        }
+        return (tempQids, tempQuestionsText);
     }
 }
