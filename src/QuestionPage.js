@@ -63,23 +63,37 @@ class QuestionPage extends React.Component {
     if (this.state.loading) {
       return <p>Loading..</p>;
     }
-
+    let isWinner = this.state.question.winners.includes(this.props.account);
+    let winners = this.state.question.winners.map(function(winner, index){
+      return <p key={index}>{winner}</p>
+    });
     return (
       <div className="form-wrapper">
         <h1 className="center">{this.props.web3.utils.toAscii(this.state.question.questionText)}</h1>
-        <form onSubmit={this.handleSubmit}>
-          <p>{this.state.question.answerAddress}</p>
-          <p>
-            {this.state.question.numWinners} / {this.state.question.maxWinners}
-          </p>
-          <p>{this.state.question.winners}</p>
-          <input
-            type="text"
-            value={this.state.textValue}
-            onChange={this.handleChange}
-          />
-          <input type="submit" value="Submit" />
-        </form>
+        { !isWinner &&
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              Answer:
+              <input
+                type="text"
+                value={this.state.textValue}
+                onChange={this.handleChange}
+              />
+            </label>
+            <input type="submit" value="Submit" />
+          </form>
+        }
+        { isWinner &&
+          <form onSubmit={this.handleSubmit}>
+            <h2>You are a winner!</h2>
+            <input type="submit" value="Claim Your Prize Now" />
+          </form>
+        }
+        <div id="winners">
+          <h2>Winners</h2>
+          <p>{this.state.question.numWinners} / {this.state.question.maxWinners} </p>
+          <p>{winners}</p>
+        </div>
       </div>
     );
   }

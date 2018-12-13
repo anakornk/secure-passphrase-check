@@ -34,7 +34,7 @@ li a:hover:not(.active) {
   background-color: #7c6190;
 }
 
-form {
+form, #winners {
   background: white; /* White background */
   padding: 30px; /* Internal space */
   border-radius: 4px; /* Small radius */
