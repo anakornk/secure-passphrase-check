@@ -11,7 +11,7 @@ class MePage extends React.Component {
 
   componentDidMount() {
     this.props.spcContract.methods
-      .getQids(this.props.account)
+      .getMyQuestions(this.props.account)
       .call()
       .then(res => {
         this.setState({
@@ -34,7 +34,7 @@ class MePage extends React.Component {
       let l = `/questions/${i}`;
       questions.push(
         <Link to={l} className="card" key={i}>
-          {qids[i]}. 
+          {qids[i]}. {this.props.web3.utils.toAscii(questionsText[i])}
         </Link>
       );
     }
