@@ -24,9 +24,31 @@ class NewPage extends React.Component {
     }
 
     handleSubmit(event) {
-        // submit
-        console.log(this.state);
         event.preventDefault();
+
+        // submit
+        let question = this.state.question;
+        let answer = this.state.answer;
+        let web3 = this.props.web3;
+        let account = this.props.account;
+        let spcContract = this.props.spcContract;
+
+        let answerPrivateKey = web3.utils.keccak256(answer);
+        var answerAddress = web3.eth.accounts.privateKeyToAccount(answerPrivateKey).address;
+
+        spcContract.methods.newQuestion(web3.utils.fromAscii(question), answerAddress, 1)
+        .send({from: account})
+        .on('transactionHash', function(hash){
+            console.log('hash', hash)
+        })
+        .on('receipt', function(receipt){
+            console.log('receipt', receipt);
+        })
+        .on('confirmation', function(confirmationNumber, receipt){
+            console.log('confirmation', confirmationNumber, receipt);
+        })
+        .on('error', console.error);
+
     }
 
     render() {

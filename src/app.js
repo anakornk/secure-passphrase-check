@@ -23,10 +23,6 @@ class App extends React.Component {
 
     setupContracts() {
       this.spcContract = new this.web3.eth.Contract(spcContractABI, config.spcContractAddress);
-      // console.log(this.spcContract.methods.numQuestions.call)
-      this.spcContract.methods.numQuestions().call().then((res) => {
-        console.log(res);
-      }).catch((error) => console.log(error));
     }
   
     render() {
@@ -38,7 +34,7 @@ class App extends React.Component {
       console.log(params);
       let page;
       if(params.page == "new"){
-        page = <NewPage spcContract={this.spcContract}/>
+        page = <NewPage web3={this.web3} spcContract={this.spcContract} account={this.state.account}/>
       } else if(params.page == "question" && parseInt(params.qid) >= 0) {
         page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} account={this.state.account}/>
       } else {
