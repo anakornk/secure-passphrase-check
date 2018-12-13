@@ -24,7 +24,7 @@ class MePage extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <div>Loading..</div>;
+      return <div className="lds-dual-ring"></div>;
     }
 
     let questions = [];

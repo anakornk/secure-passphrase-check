@@ -2,12 +2,19 @@ import React from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 class QuestionPage extends React.Component {
-  notify(){
+  showError() {
     toast.error("Wrong Answer!", {
       position: toast.POSITION.TOP_RIGHT,
       autoClose: 1500
     });
   } 
+
+  showSuccess() {
+    toast.success("You are correct!", {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 1500
+    });
+  }
 
   constructor(props) {
     super(props);
@@ -63,12 +70,13 @@ class QuestionPage extends React.Component {
                 question: tempQuestion,
                 onClick: false
               })
+              this.showSuccess();
             })
             .catch(console.error);
         } else {
           // show error
           this.setState({onClick: false});
-          this.notify();
+          this.showError();
         }
       });
   }
