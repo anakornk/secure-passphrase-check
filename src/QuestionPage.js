@@ -6,6 +6,7 @@ class QuestionPage extends React.Component {
     this.state = {
       loading: true,
       textValue: "",
+      onClick: false
     };
    
     props.spcContract.methods
@@ -28,6 +29,7 @@ class QuestionPage extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
+    this.setState({onClick: true})
     var answer = this.state.textValue;
     var web3 = this.props.web3;
     var answerPrivateKey = web3.utils.keccak256(answer);
@@ -50,10 +52,14 @@ class QuestionPage extends React.Component {
               tempQuestion.winners.push(this.props.account);
               tempQuestion.numWinners++;
               this.setState({
-                question: tempQuestion
+                question: tempQuestion,
+                onClick: false
               })
             })
             .catch(console.error);
+        } else {
+          // show error
+          this.setState({onClick: false});
         }
       });
   }
@@ -64,7 +70,7 @@ class QuestionPage extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <p>Loading..</p>;
+      return <div className="lds-dual-ring"></div>;
     }
     let isWinner = this.state.question.winners.includes(this.props.account);
     let winners = this.state.question.winners.map(function(winner, index){
@@ -72,6 +78,7 @@ class QuestionPage extends React.Component {
     });
     return (
       <div className="form-wrapper">
+        { this.state.onClick && <div className="lds-dual-ring"></div> }
         <h1 className="center">{this.props.web3.utils.toAscii(this.state.question.questionText)}</h1>
         { !isWinner &&
           <form onSubmit={this.handleSubmit}>
@@ -83,13 +90,13 @@ class QuestionPage extends React.Component {
                 onChange={this.handleChange}
               />
             </label>
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Submit" disabled={this.state.textValue.length == 0}/>
           </form>
         }
         { isWinner &&
           <form onSubmit={this.handleSubmit}>
             <h2>You are a winner!</h2>
-            <input type="submit" value="Claim Your Prize Now" />
+            <input type="submit" value="Claim Your Prize Now"/>
           </form>
         }
         <div id="winners">

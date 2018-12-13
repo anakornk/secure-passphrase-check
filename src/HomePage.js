@@ -37,9 +37,8 @@ class HomePage extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <div>Loading..</div>;
+      return <div className="lds-dual-ring"></div>;
     }
-
     let questions = [];
     let qids = this.state.questions.qids;
     let questionsText = this.state.questions.questionsText;

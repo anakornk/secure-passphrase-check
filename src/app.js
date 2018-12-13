@@ -32,7 +32,7 @@ class App extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <p>Loading..</p>;
+      return <div className="lds-dual-ring"></div>;
     }
 
     // let params = queryString.parse(window.location.href.split('#')[1])

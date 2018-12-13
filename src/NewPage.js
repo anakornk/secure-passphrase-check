@@ -62,6 +62,7 @@ class NewPage extends React.Component {
               name="question"
               value={this.state.question}
               onChange={this.handleChange}
+              maxLength="32"
             />
           </label>
           <label>
