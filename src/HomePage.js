@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 class HomePage extends React.Component {
     constructor(props) {
@@ -37,8 +38,9 @@ class HomePage extends React.Component {
         let qids = this.state.questions.qids;
         let questionsText = this.state.questions.questionsText;
         for(let i=0; i < qids.length; i++) {
+            let l = `/questions/${i}`;
             questions.push(
-                <p key={i}><a href={"/?page=question&qid=" + qids[i]}>{qids[i]} {this.props.web3.utils.toAscii(questionsText[i])}</a></p>
+                <p key={i}><Link to={l}>{qids[i]} {this.props.web3.utils.toAscii(questionsText[i])}</Link></p>
             );
         }
         return (

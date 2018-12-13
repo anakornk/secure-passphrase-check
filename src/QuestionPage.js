@@ -6,8 +6,7 @@ class QuestionPage extends React.Component {
             loading: true,
             textValue: ''
         }
-        console.log(props);
-        this.props.spcContract.methods.getQuestion(this.props.qid).call().then((res) => {
+        props.spcContract.methods.getQuestion(props.match.params.id).call().then((res) => {
             this.setState({
                 loading: false,
                 question: res
@@ -26,12 +25,12 @@ class QuestionPage extends React.Component {
         var answerPrivateKey = web3.utils.keccak256(answer);
         var a = new web3.utils.BN(this.props.account.substr(2), 16);
         var { signature } = web3.eth.accounts.sign(a.toBuffer(), answerPrivateKey);
-        this.props.spcContract.methods.checkAnswer(this.props.qid, signature).call({from: this.props.account})
+        this.props.spcContract.methods.checkAnswer(this.props.match.params.id, signature).call({from: this.props.account})
         .then((res) => {
             console.log(res);
 
             if(res) {
-                this.props.spcContract.methods.submit(this.props.qid, signature)
+                this.props.spcContract.methods.submit(this.props.match.params.id, signature)
                 .send({from: this.props.account})
                 .on('transactionHash', function(hash){
                     console.log(hash)

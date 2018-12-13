@@ -5,8 +5,8 @@ import { abi as spcContractABI } from '../build/contracts/SecurePassphraseCheck.
 import HomePage from './HomePage';
 import NewPage from './NewPage';
 import QuestionPage from './QuestionPage';
-import queryString from 'query-string';
 import './app.css';
+import { HashRouter, Route, NavLink } from "react-router-dom";
 
 
 class App extends React.Component {
@@ -32,30 +32,34 @@ class App extends React.Component {
         return <p>Loading..</p>;
       }
 
-      let params = queryString.parseUrl(window.location.href).query;
-      console.log(params);
-      let page;
-      if(params.page == "new"){
-        page = <NewPage web3={this.web3} spcContract={this.spcContract} account={this.state.account}/>
-      } else if(params.page == "question" && parseInt(params.qid) >= 0) {
-        page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} account={this.state.account}/>
-      } else {
-        page = <HomePage web3={this.web3} spcContract={this.spcContract}/>
-      }
+      // let params = queryString.parse(window.location.href.split('#')[1])
+      // let page;
+      // if(params.page == "new"){
+      //   page = <NewPage web3={this.web3} spcContract={this.spcContract} account={this.state.account}/>
+      // } else if(params.page == "question" && parseInt(params.qid) >= 0) {
+      //   page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} account={this.state.account}/>
+      // } else {
+      //   page = <HomePage web3={this.web3} spcContract={this.spcContract}/>
+      // }
+
       return (
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <a href="/?page=home" className={ params.page == 'home' ? 'active' : ''}>Home</a>
-              </li>
-              <li>
-                <a href="/?page=new" className={ params.page == 'new' ? 'active' : ''}>New</a>
-              </li>
-            </ul>
-          </nav>
-          { page }
-        </div>
+        <HashRouter>
+          <div>
+            <nav>
+              <ul>
+                <li>
+                  <NavLink exact to="/">Home</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/new">New</NavLink>
+                </li>
+              </ul>
+            </nav>
+            <Route path="/" exact render={(props) => <HomePage {...props} web3={this.web3} spcContract={this.spcContract}/>} />
+            <Route path="/new" render={(props) => <NewPage {...props} web3={this.web3} spcContract={this.spcContract} account={this.state.account}/>} />
+            <Route path="/questions/:id" render={(props) => <QuestionPage {...props} web3={this.web3} spcContract={this.spcContract} account={this.state.account}/>} />
+          </div>
+        </HashRouter>
       );
     }
   }
