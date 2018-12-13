@@ -26,8 +26,9 @@ contract('Test SecurePassphraseCheck', function(accounts) {
     assert.equal(web3.utils.toAscii(res.questionText).replace(/\0/g, ''), question);
     assert.strictEqual(res.answerAddress, answerAddress);
 
-    let qids = await instance.getQids.call(testAccount, {from: testAccount});
+    let { qids, questionsText } = await instance.getMyQuestions.call(testAccount, {from: testAccount});
     assert.equal(qids.length, 1);
+    assert.equal(questionsText.length, 1);
   });
 
   it("should check passphrase correctly", async function() {

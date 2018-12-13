@@ -5,6 +5,7 @@ import { abi as spcContractABI } from "../build/contracts/SecurePassphraseCheck.
 import HomePage from "./HomePage";
 import NewPage from "./NewPage";
 import QuestionPage from "./QuestionPage";
+import MePage from "./MePage";
 import "./app.css";
 import { HashRouter, Route, NavLink } from "react-router-dom";
 
@@ -55,7 +56,10 @@ class App extends React.Component {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/new">New</NavLink>
+                <NavLink to="/new">New Question</NavLink>
+              </li>
+              <li>
+                <NavLink to="/me">My Questions</NavLink>
               </li>
             </ul>
           </nav>
@@ -85,6 +89,17 @@ class App extends React.Component {
             path="/questions/:id"
             render={props => (
               <QuestionPage
+                {...props}
+                web3={this.web3}
+                spcContract={this.spcContract}
+                account={this.state.account}
+              />
+            )}
+          />
+          <Route
+            path="/me"
+            render={props => (
+              <MePage
                 {...props}
                 web3={this.web3}
                 spcContract={this.spcContract}

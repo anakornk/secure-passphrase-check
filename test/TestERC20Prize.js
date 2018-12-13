@@ -16,8 +16,9 @@ contract('ERC20Prize', function(accounts) {
     let instance = await ERC20Prize.deployed();
 
     let qId = (await scpContract.numQuestions()) - 1; // get last question_id
-    let qids = await scpContract.getQids.call(instance.address);
+    let { qids, questionsText } = await scpContract.getMyQuestions.call(instance.address);
     assert.equal(qids.length, 1);
+    assert.equal(questionsText.length, 1);
     assert.equal(qids[0], qId);
   });
 

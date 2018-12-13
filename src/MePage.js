@@ -1,0 +1,50 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+class MePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    this.props.spcContract.methods
+      .getQids(this.props.account)
+      .call()
+      .then(res => {
+        this.setState({
+          loading: false,
+          questions: res
+        })
+      })
+      .catch(error => console.log(error));
+  }
+
+  render() {
+    if (this.state.loading) {
+      return <div>Loading..</div>;
+    }
+
+    let questions = [];
+    let qids = this.state.questions.qids;
+    let questionsText = this.state.questions.questionsText;
+    for (let i = qids.length - 1; i >= 0; i--) {
+      let l = `/questions/${i}`;
+      questions.push(
+        <Link to={l} className="card" key={i}>
+          {qids[i]}. 
+        </Link>
+      );
+    }
+    return (
+      <div className="cards">
+        <h1 className="center">My Questions</h1>
+        {questions}
+      </div>
+    );
+  }
+}
+
+export default MePage;

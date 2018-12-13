@@ -1,12 +1,13 @@
 import React from "react";
-
+import { Redirect } from "react-router-dom";
 class NewPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       question: "",
       answer: "",
-      max: 1
+      max: 1,
+      isMined: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -34,27 +35,24 @@ class NewPage extends React.Component {
     let spcContract = this.props.spcContract;
 
     let answerPrivateKey = web3.utils.keccak256(answer);
-    var answerAddress = web3.eth.accounts.privateKeyToAccount(answerPrivateKey)
-      .address;
+    var answerAddress = web3.eth.accounts.privateKeyToAccount(answerPrivateKey).address;
+
+    var that = this;
 
     spcContract.methods
       .newQuestion(web3.utils.fromAscii(question), answerAddress, 1)
       .send({ from: account })
-      .on("transactionHash", function(hash) {
-        console.log("hash", hash);
+      .then(function(receipt){
+        console.log(receipt);
+        that.setState({isMined: true});
       })
-      .on("receipt", function(receipt) {
-        console.log("receipt", receipt);
-      })
-      .on("confirmation", function(confirmationNumber, receipt) {
-        console.log("confirmation", confirmationNumber, receipt);
-      })
-      .on("error", console.error);
+      .catch("error", console.error);
   }
 
   render() {
     return (
       <div className="form-wrapper">
+        { this.state.isMined && <Redirect to="/me"/>}
         <h1 className="center">New Question</h1>
         <form onSubmit={this.handleSubmit}>
           <label>

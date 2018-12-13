@@ -1,11 +1,14 @@
 import React from "react";
+
 class QuestionPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      textValue: ""
+      textValue: "",
+      modalIsOpen: false
     };
+   
     props.spcContract.methods
       .getQuestion(props.match.params.id)
       .call()
@@ -21,6 +24,9 @@ class QuestionPage extends React.Component {
     // bind this
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.afterOpenModal = this.afterOpenModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   handleSubmit(event) {
@@ -59,6 +65,19 @@ class QuestionPage extends React.Component {
     this.setState({ textValue: event.target.value });
   }
 
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = '#f00';
+  }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+
   render() {
     if (this.state.loading) {
       return <p>Loading..</p>;
@@ -92,7 +111,7 @@ class QuestionPage extends React.Component {
         <div id="winners">
           <h2>Winners</h2>
           <p>{this.state.question.numWinners} / {this.state.question.maxWinners} </p>
-          <p>{winners}</p>
+          <div>{winners}</div>
         </div>
       </div>
     );
