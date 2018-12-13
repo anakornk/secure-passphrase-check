@@ -7,7 +7,8 @@ class NewPage extends React.Component {
       question: "",
       answer: "",
       max: 1,
-      isMined: false
+      isMined: false,
+      onClick: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -27,6 +28,7 @@ class NewPage extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
+    this.setState({onClick: true});
     // submit
     let question = this.state.question;
     let answer = this.state.answer;
@@ -44,7 +46,7 @@ class NewPage extends React.Component {
       .send({ from: account })
       .then(function(receipt){
         console.log(receipt);
-        that.setState({isMined: true});
+        that.setState({isMined: true, onClick: false});
       })
       .catch(console.error);
   }
@@ -52,6 +54,7 @@ class NewPage extends React.Component {
   render() {
     return (
       <div className="form-wrapper">
+        { this.state.onClick && <div className="lds-dual-ring"></div> }
         { this.state.isMined && <Redirect to="/me"/>}
         <h1 className="center">New Question</h1>
         <form onSubmit={this.handleSubmit}>
