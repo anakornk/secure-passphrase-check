@@ -54,7 +54,8 @@ class NewPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="form-wrapper">
+        <h1 className="center">New Question</h1>
         <form onSubmit={this.handleSubmit}>
           <label>
             Question:
@@ -75,7 +76,7 @@ class NewPage extends React.Component {
             />
           </label>
           <label>
-            Max:
+            Number of Maximum Winners:
             <input
               type="number"
               name="max"

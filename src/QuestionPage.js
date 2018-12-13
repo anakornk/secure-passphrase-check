@@ -20,10 +20,12 @@ class QuestionPage extends React.Component {
 
     // bind this
     this.handleChange = this.handleChange.bind(this);
-    this.submit = this.submit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  submit() {
+  handleSubmit(event) {
+    event.preventDefault();
+
     var answer = this.state.textValue;
     var web3 = this.props.web3;
     var answerPrivateKey = web3.utils.keccak256(answer);
@@ -63,19 +65,21 @@ class QuestionPage extends React.Component {
     }
 
     return (
-      <div>
-        <p>{this.props.web3.utils.toAscii(this.state.question.questionText)}</p>
-        <p>{this.state.question.answerAddress}</p>
-        <p>
-          {this.state.question.numWinners} / {this.state.question.maxWinners}
-        </p>
-        <p>{this.state.question.winners}</p>
-        <input
-          type="text"
-          value={this.state.textValue}
-          onChange={this.handleChange}
-        />
-        <button onClick={this.submit}>Submit</button>
+      <div className="form-wrapper">
+        <h1 className="center">{this.props.web3.utils.toAscii(this.state.question.questionText)}</h1>
+        <form onSubmit={this.handleSubmit}>
+          <p>{this.state.question.answerAddress}</p>
+          <p>
+            {this.state.question.numWinners} / {this.state.question.maxWinners}
+          </p>
+          <p>{this.state.question.winners}</p>
+          <input
+            type="text"
+            value={this.state.textValue}
+            onChange={this.handleChange}
+          />
+          <input type="submit" value="Submit" />
+        </form>
       </div>
     );
   }
