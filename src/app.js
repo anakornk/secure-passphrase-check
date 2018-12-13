@@ -6,6 +6,8 @@ import HomePage from './HomePage';
 import NewPage from './NewPage';
 import QuestionPage from './QuestionPage';
 import queryString from 'query-string';
+import './app.css';
+
 
 class App extends React.Component {
     constructor(props) {
@@ -45,10 +47,10 @@ class App extends React.Component {
           <nav>
             <ul>
               <li>
-                <a href="/?page=home">Home</a>
+                <a href="/?page=home" className={ params.page == 'home' ? 'active' : ''}>Home</a>
               </li>
               <li>
-                <a href="/?page=new">New</a>
+                <a href="/?page=new" className={ params.page == 'new' ? 'active' : ''}>New</a>
               </li>
             </ul>
           </nav>
