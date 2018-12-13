@@ -1,6 +1,14 @@
 import React from "react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 class QuestionPage extends React.Component {
+  notify(){
+    toast.error("Wrong Answer!", {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 1500
+    });
+  } 
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +36,7 @@ class QuestionPage extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
+    
     this.setState({onClick: true})
     var answer = this.state.textValue;
     var web3 = this.props.web3;
@@ -60,6 +68,7 @@ class QuestionPage extends React.Component {
         } else {
           // show error
           this.setState({onClick: false});
+          this.notify();
         }
       });
   }
@@ -78,6 +87,7 @@ class QuestionPage extends React.Component {
     });
     return (
       <div className="form-wrapper">
+        <ToastContainer/>
         { this.state.onClick && <div className="lds-dual-ring"></div> }
         <h1 className="center">{this.props.web3.utils.toAscii(this.state.question.questionText)}</h1>
         { !isWinner &&
