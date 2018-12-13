@@ -44,7 +44,7 @@ class HomePage extends React.Component {
     let qids = this.state.questions.qids;
     let questionsText = this.state.questions.questionsText;
     for (let i = qids.length - 1; i >= 0; i--) {
-      let l = `/questions/${i}`;
+      let l = `/questions/${qids[i]}`;
       questions.push(
         <Link to={l} className="card" key={i}>
           {qids[i]}. {this.props.web3.utils.toAscii(questionsText[i])}

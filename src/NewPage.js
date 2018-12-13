@@ -46,7 +46,7 @@ class NewPage extends React.Component {
         console.log(receipt);
         that.setState({isMined: true});
       })
-      .catch("error", console.error);
+      .catch(console.error);
   }
 
   render() {

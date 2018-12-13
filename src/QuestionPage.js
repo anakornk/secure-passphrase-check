@@ -6,7 +6,6 @@ class QuestionPage extends React.Component {
     this.state = {
       loading: true,
       textValue: "",
-      modalIsOpen: false
     };
    
     props.spcContract.methods
@@ -24,9 +23,6 @@ class QuestionPage extends React.Component {
     // bind this
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
   }
 
   handleSubmit(event) {
@@ -47,35 +43,23 @@ class QuestionPage extends React.Component {
           this.props.spcContract.methods
             .submit(this.props.match.params.id, signature)
             .send({ from: this.props.account })
-            .on("transactionHash", function(hash) {
-              console.log(hash);
-            })
-            .on("receipt", function(receipt) {
+            .then((receipt) => {
               console.log(receipt);
+              // update old data without fetching new data
+              let tempQuestion = Object.assign({}, this.state.question);
+              tempQuestion.winners.push(this.props.account);
+              tempQuestion.numWinners++;
+              this.setState({
+                question: tempQuestion
+              })
             })
-            .on("confirmation", function(confirmationNumber, receipt) {
-              console.log(confirmationNumber, receipt);
-            })
-            .on("error", console.error);
+            .catch(console.error);
         }
       });
   }
 
   handleChange(event) {
     this.setState({ textValue: event.target.value });
-  }
-
-  openModal() {
-    this.setState({modalIsOpen: true});
-  }
-
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
-  }
-
-  closeModal() {
-    this.setState({modalIsOpen: false});
   }
 
   render() {
