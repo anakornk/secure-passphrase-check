@@ -14,17 +14,16 @@ contract('Test PrizeCreator', function(accounts) {
   var a = new BN(testAccount.substr(2), 16);
   var { signature } = web3.eth.accounts.sign(a.toBuffer(), answerPrivateKey);
 
-  // it("should not be able to add ETHPrize if qId doesn't exist", async function() {
-  //   let scpContract = await SecurePassphraseCheck.deployed();
-  //   let prizeCreator = await PrizeCreator.deployed();
-  //   try {
-  //     await prizeCreator.createETHPrize(0);
-  //     assest.fail();
-  //   } catch (err) {
-  //     assert.ok(/revert/.test(err.message));
-  //   }
+  it("should not be able to add ETHPrize if not owner", async function() {
+    let prizeCreator = await PrizeCreator.deployed();
+    try {
+      await prizeCreator.createETHPrize(0);
+      assest.fail();
+    } catch (err) {
+      assert.ok(/revert/.test(err.message));
+    }
 
-  // });
+  });
 
   it("should add ETHPrize correctly", async function() {
     let scpContract = await SecurePassphraseCheck.deployed();
@@ -46,18 +45,6 @@ contract('Test PrizeCreator', function(accounts) {
     let prizeValue = await prize.getPrizeValue.call({from: testAccount});
     assert(prizeValue.toString(16), '500000000000000000');
   });
-
-  // it("should check ETHPrize value correctly", async function() {
-  //   let scpContract = await SecurePassphraseCheck.deployed();
-  //   let basicToken = await BasicToken.deployed();
-  //   let prizeCreator = await PrizeCreator.deployed();
-  //   let qId = (await scpContract.numQuestions()) - 1; // get last question_id
-  //   let prizeAddress = await prizeCreator.getPrizeAddress(qId);
-  //   let prize = await Prize.at(prizeAddress);
-  //   await basicToken.mint(prizeAddress, 100, {from: testAccount});
-  //   let prizeValue = await prize.getPrizeValue.call({from: testAccount});
-  //   assert(prizeValue, 100);
-  // });
 
   it("should not be able to claim ethprize if not winner", async function() {
     let scpContract = await SecurePassphraseCheck.deployed();
@@ -85,5 +72,18 @@ contract('Test PrizeCreator', function(accounts) {
     let prizeValue = await prize.getPrize.call({from: testAccount});
     assert(prizeValue, 0);
   });
+
+
+  // it("should check ETHPrize value correctly", async function() {
+  //   let scpContract = await SecurePassphraseCheck.deployed();
+  //   let basicToken = await BasicToken.deployed();
+  //   let prizeCreator = await PrizeCreator.deployed();
+  //   let qId = (await scpContract.numQuestions()) - 1; // get last question_id
+  //   let prizeAddress = await prizeCreator.getPrizeAddress(qId);
+  //   let prize = await Prize.at(prizeAddress);
+  //   await basicToken.mint(prizeAddress, 100, {from: testAccount});
+  //   let prizeValue = await prize.getPrizeValue.call({from: testAccount});
+  //   assert(prizeValue, 100);
+  // });
 
 });

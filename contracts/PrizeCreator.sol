@@ -57,11 +57,11 @@ contract ERC20Prize is Prize {
 }
 
 contract PrizeCreator {
-    address public spcContractAddress;
+    SecurePassphraseCheck public spcContract;
     mapping ( uint => address ) public qIdToPrizeAddress;
 
     constructor(address _spcContractAddress) public {
-        spcContractAddress = _spcContractAddress;
+        spcContract = SecurePassphraseCheck(_spcContractAddress);
     }
 
     function getPrizeAddress(uint _qId) public view returns (address prizeAddress) {
@@ -73,13 +73,18 @@ contract PrizeCreator {
         _;
     }
 
-    function createERC20Prize(uint _qId, address _erc20TokenContractAddress, string _symbol) public hasNoPrize(_qId) {
-        address prizeAddress = new ERC20Prize(spcContractAddress, _qId, _erc20TokenContractAddress, _symbol);
+    modifier isOwner(uint _qId) {
+        require(spcContract.getCreator(_qId) == msg.sender, "Not owner");
+        _;
+    }
+
+    function createERC20Prize(uint _qId, address _erc20TokenContractAddress, string _symbol) public hasNoPrize(_qId) isOwner(_qId) {
+        address prizeAddress = new ERC20Prize(address(spcContract), _qId, _erc20TokenContractAddress, _symbol);
         qIdToPrizeAddress[_qId] = prizeAddress;
     }
 
-    function createETHPrize(uint _qId) public hasNoPrize(_qId) {
-        address prizeAddress = new ETHPrize(spcContractAddress, _qId);
+    function createETHPrize(uint _qId) public hasNoPrize(_qId) isOwner(_qId) {
+        address prizeAddress = new ETHPrize( address(spcContract), _qId);
         qIdToPrizeAddress[_qId] = prizeAddress;
     }
 }

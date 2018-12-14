@@ -12,6 +12,7 @@ contract SecurePassphraseCheck {
         uint maxWinner;
         uint numWinners;
         address[] winners;
+        address creator;
         mapping ( address => bool ) isWinner;
     }
 
@@ -34,7 +35,7 @@ contract SecurePassphraseCheck {
         qId = numQuestions;
         numQuestions = numQuestions.add(1);
         // check last param, gas
-        questions[qId] = Question(_questionText, _answerAddress, _maxWinner, 0, new address[](0));
+        questions[qId] = Question(_questionText, _answerAddress, _maxWinner, 0, new address[](0), msg.sender);
         addressToQids[msg.sender].push(qId);
     }
 
@@ -43,9 +44,14 @@ contract SecurePassphraseCheck {
         address answerAddress, 
         uint maxWinners, 
         uint numWinners, 
-        address[] winners) {
+        address[] winners,
+        address creator) {
         Question storage question = questions[_qId];
-        return (question.questionText, question.answerAddress, question.maxWinner, question.numWinners, question.winners);
+        return (question.questionText, question.answerAddress, question.maxWinner, question.numWinners, question.winners, question.creator);
+    }
+
+    function getCreator(uint _qId) public view returns (address creator) {
+        return questions[_qId].creator;
     }
 
     function checkAnswer(uint _qId, bytes _signature) public view returns (bool) {
