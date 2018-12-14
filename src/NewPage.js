@@ -8,7 +8,8 @@ class NewPage extends React.Component {
       answer: "",
       max: 1,
       isMined: false,
-      onClick: false
+      onClick: false,
+      addPrize: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -17,7 +18,7 @@ class NewPage extends React.Component {
 
   handleChange(event) {
     const target = event.target;
-    const value = target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
     this.setState({
@@ -86,6 +87,14 @@ class NewPage extends React.Component {
               onChange={this.handleChange}
             />
           </label>
+          <label>
+            Add Prize:
+            <input
+              type="checkbox"
+              name="addPrize"
+              checked={this.state.addPrize}
+              onChange={this.handleChange} />
+        </label>
           <input type="submit" value="Submit" />
         </form>
       </div>
