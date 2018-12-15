@@ -241,7 +241,7 @@ class QuestionPage extends React.Component {
         }
         { this.state.hasPrize &&
           <div className="card card-col">
-            <h2>Prize:  {this.state.prize.symbol == "WEI" ? this.props.web3.utils.fromWei(this.state.prize.value) : this.state.prize.value} {this.state.prize.symbol}</h2>
+            <h2>Prize:  {this.state.prize.symbol == "WEI" ? this.props.web3.utils.fromWei(this.state.prize.value) : this.state.prize.value} {this.state.prize.symbol == "WEI" ? "ETH" : this.state.prize.symbol}</h2>
             { this.state.question.creator == this.props.account && 
               <p
               >To add prize, send {this.state.prize.symbol} to the prize address below
