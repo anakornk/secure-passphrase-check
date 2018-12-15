@@ -14,14 +14,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { loading: true };
-    this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-    this.web3.eth.getAccounts().then(accounts => {
-      this.setState({
-        loading: !(accounts.length > 0),
-        account: accounts[0]
-      });
-    });
-    this.setupContracts();
+    // this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+    // this.web3.eth.getAccounts().then(accounts => {
+    //   this.setState({
+    //     loading: !(accounts.length > 0),
+    //     account: accounts[0]
+    //   });
+    // });
+    this.setUpWeb3();
+    // this.setupContracts();
   }
 
   setupContracts() {
@@ -33,22 +34,74 @@ class App extends React.Component {
       prizeCreatorABI,
       config.prizeCreatorAddress
     );
+    this.setUpAccount();
+  }
+
+  setUpAccount() {
+    var that = this;
+    var accountInterval = setInterval(function() {
+      // if (web3.eth.accounts[0] !== account) {
+      //   account = web3.eth.accounts[0];
+      //   updateInterface();
+      // }
+      that.web3.eth.getAccounts().then(accounts => {
+        if(accounts.length > 0){
+          that.setState({
+            loading: false,
+            account: accounts[0]
+          });
+        } else {
+          that.setState({loading: true})
+          console.log("no account / please unlock")
+        }
+      });
+    }, 100);
+
+
+
+  }
+
+  setUpWeb3() {
+    this.web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+    if(this.web3.currentProvider.isMetaMask){
+      ethereum.enable().then(()=>{
+        // Accounts now exposed
+        this.setupContracts();
+      });
+    } else {
+      this.setupContracts();
+    }
+   
+
+    // if (window.ethereum) {
+    //   this.web3 = new Web3(ethereum);
+    //   try {
+    //       // Request account access if needed
+    //       await ethereum.enable();
+    //       // Acccounts now exposed
+
+          
+    //   } catch (error) {
+    //       // User denied account access...
+    //       console.log(error);
+    //   }
+    // }
+    // // Legacy dapp browsers...
+    // else if (window.web3) {
+    //   this.web3 = new Web3(Web3.givenProvider);
+    //   new Web3(Web3.givenProvider || "ws://localhost:8545")
+    //   // Acccounts always exposed
+    // }
+    // // Non-dapp browsers...
+    // else {
+    //   console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    // }
   }
 
   render() {
     if (this.state.loading) {
       return <div className="lds-dual-ring"></div>;
     }
-
-    // let params = queryString.parse(window.location.href.split('#')[1])
-    // let page;
-    // if(params.page == "new"){
-    //   page = <NewPage web3={this.web3} spcContract={this.spcContract} account={this.state.account}/>
-    // } else if(params.page == "question" && parseInt(params.qid) >= 0) {
-    //   page = <QuestionPage web3={this.web3} spcContract={this.spcContract} qid={params.qid} account={this.state.account}/>
-    // } else {
-    //   page = <HomePage web3={this.web3} spcContract={this.spcContract}/>
-    // }
 
     return (
       <HashRouter>
