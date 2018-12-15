@@ -14,7 +14,7 @@ contract ETHPrize is Prize {
     }
 
     function getPrizeSymbol() public view returns (string) {
-        return "ETH";
+        return "WEI";
     }
 
     function () public payable {}   

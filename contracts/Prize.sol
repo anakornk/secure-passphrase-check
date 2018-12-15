@@ -28,7 +28,6 @@ contract Prize {
 
     function claim() public isWinner {
         _claim();
-
     }
     function getPrizeValue() public view returns (uint);
 

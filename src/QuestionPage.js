@@ -27,7 +27,7 @@ class QuestionPage extends React.Component {
       prize: "eth",
       erc20Address: "",
       qId: props.match.params.id,
-      hasPrize: false
+      hasPrize: false,
     };
    
     props.spcContract.methods
@@ -69,9 +69,6 @@ class QuestionPage extends React.Component {
 
     })
     .catch(error => console.log(error));
-
-
-    
 
     // bind this
     this.handleChange = this.handleChange.bind(this);
@@ -127,6 +124,7 @@ class QuestionPage extends React.Component {
     
     let qId = this.state.qId
     let prize = this.state.prize;
+    let symbol = this.state.symbol;
     let erc20Address = this.state.erc20Address;
 
     if(prize == "eth") {
@@ -135,7 +133,8 @@ class QuestionPage extends React.Component {
       prizeCreator.methods.createETHPrize(qId).send({from: account})
       .then((receipt)=> {
         console.log(receipt);
-        this.setState({isMined: true, onClick: false});
+        this.setState({onClick: false});
+        location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -144,9 +143,10 @@ class QuestionPage extends React.Component {
       });
     } else if(prize == "erc20") {
       console.log("Erc20");
-      prizeCreator.methods.createERC20Prize(qId, erc20Address, "TATA").send({from: account})
+      prizeCreator.methods.createERC20Prize(qId, erc20Address, symbol).send({from: account})
       .then((receipt)=> {
-        this.setState({isMined: true, onClick: false});
+        this.setState({onClick: false});
+        location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -158,7 +158,14 @@ class QuestionPage extends React.Component {
 
   claimPrize(event) {
     event.preventDefault();
-
+    this.prize.methods
+    .claim()
+    .send({ from: this.props.account })
+    .then(res => {
+      console.log(res.events.Claim.returnValues);
+      location.reload();
+    })
+    .catch(error => console.log(error));
 
   }
 
@@ -229,12 +236,12 @@ class QuestionPage extends React.Component {
                 </label>
               </div>
             }
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Add Prize" />
           </form>
         }
         { this.state.hasPrize &&
           <div className="card card-col">
-            <h2>Prize:  {this.props.web3.utils.fromWei(this.state.prize.value)} {this.state.prize.symbol}</h2>
+            <h2>Prize:  {this.state.prize.symbol == "WEI" ? this.props.web3.utils.fromWei(this.state.prize.value) : this.state.prize.value} {this.state.prize.symbol}</h2>
             { this.state.question.creator == this.props.account && 
               <p
               >To add prize, send {this.state.prize.symbol} to the prize address below
@@ -260,7 +267,9 @@ class QuestionPage extends React.Component {
         { isWinner &&
           <form onSubmit={this.claimPrize}>
             <h2>You are a winner!</h2>
-            <input type="submit" value="Claim Your Prize Now"/>
+            { this.state.hasPrize &&
+              <input type="submit" value="Claim Your Prize Now" />
+            }
           </form>
         }
         <div className="card card-col">
