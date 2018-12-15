@@ -9,3 +9,16 @@ const config = {
 
 export default config;
 ```
+
+### Development
+npm install  
+add config.js
+ganache-cli  
+npm run dev  
+truffe test
+
+### Production
+npm install 
+add config.js  
+npm run build  
+npm run start
