@@ -1,7 +1,7 @@
 const config = {
-  spcContractAddress: "0xb8aA4Ad9D39763D42c81ed092c4dE99Cb69a442a",
-  basicTokenAddress: "0xF5f0130A7a770dbb9B38ccCa687d6319c2783F1C",
-  prizeCreatorAddress: "0x4D15B24652CA81aF1BeD75eC9CeDe4d404EadEC5"
+  spcContractAddress: "0x3998CDf192fA25aBd0AC16C09bA3D81f4F9AA7ba",
+  basicTokenAddress: "0x83332F232d9e51888270e95cbAbeBa5112fFAD54",
+  prizeCreatorAddress: "0x91a9706C80FA6d48186cB51986275161a42F1Dc2"
 };
 
 export default config;

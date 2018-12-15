@@ -9,11 +9,14 @@ class NewPage extends React.Component {
       max: 1,
       isMined: false,
       onClick: false,
-      addPrize: false
+      addPrize: false,
+      prize: "eth",
+      erc20Address: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.hasEmptyInput = this.hasEmptyInput.bind(this);
   }
 
   handleChange(event) {
@@ -36,20 +39,47 @@ class NewPage extends React.Component {
     let web3 = this.props.web3;
     let account = this.props.account;
     let spcContract = this.props.spcContract;
+    let prizeCreator = this.props.prizeCreator;
 
     let answerPrivateKey = web3.utils.keccak256(answer);
     var answerAddress = web3.eth.accounts.privateKeyToAccount(answerPrivateKey).address;
 
-    var that = this;
-
     spcContract.methods
       .newQuestion(web3.utils.fromAscii(question), answerAddress, 1)
       .send({ from: account })
-      .then(function(receipt){
+      .then((receipt) => {
         console.log(receipt);
-        that.setState({isMined: true, onClick: false});
+        if(this.state.addPrize) {
+          if(this.state.prize == "eth") {
+            console.log("eth");
+            prizeCreator.methods.createETHPrize(0).send({from: account})
+            .then((receipt)=> {
+              this.setState({isMined: true, onClick: false});
+            })
+            .catch((err) => {
+              console.log(err);
+              // show error
+              this.setState({onClick: false});
+            });
+          } else if(this.state.prize == "erc20") {
+            console.log("Erc20");
+            prizeCreator.methods.createERC20Prize(0, this.state.erc20Address, "TATA").send({from: account})
+            .then((receipt)=> {
+              this.setState({isMined: true, onClick: false});
+            })
+            .catch((err) => {
+              console.log(err);
+              // show error
+              this.setState({onClick: false});
+            });
+          }
+        }
       })
       .catch(console.error);
+  }
+
+  hasEmptyInput() {
+    return (this.state.question.length == 0) || (this.state.answer.length == 0) || (this.state.max <= 0)
   }
 
   render() {
@@ -94,8 +124,40 @@ class NewPage extends React.Component {
               name="addPrize"
               checked={this.state.addPrize}
               onChange={this.handleChange} />
-        </label>
-          <input type="submit" value="Submit" />
+          </label>
+          { this.state.addPrize && 
+            <div className="radio-group">
+              <label>
+                <input
+                  type="radio"
+                  name="prize"
+                  value="eth"
+                  checked={this.state.prize == "eth"}
+                  onChange={this.handleChange} />
+                  ETH
+              </label>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="prize"
+                    value="erc20"
+                    checked={this.state.prize == "erc20"}
+                    onChange={this.handleChange} />
+                    ERC20
+                </label>
+                <label>
+                  <input
+                    type="input"
+                    name="erc20Address"
+                    placeholder="Contract Address e.g. 0x123456789"
+                    checked={this.state.erc20Address}
+                    onChange={this.handleChange} />
+                </label>
+              </div>
+            </div>
+          }
+          <input type="submit" value="Submit" disabled={this.hasEmptyInput()} />
         </form>
       </div>
     );

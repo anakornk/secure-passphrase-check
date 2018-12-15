@@ -130,6 +130,13 @@ form input[type=submit]:disabled {
   background-color: #DEE1E6;
 }
 
+.radio-group {
+  /* display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center; */
+}
+
 /** spinner **/
 .lds-dual-ring {
   display: inline-block;

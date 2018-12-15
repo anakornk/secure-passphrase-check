@@ -2,6 +2,7 @@ import React from "react";
 import Web3 from "web3";
 import config from "./config.js";
 import { abi as spcContractABI } from "../build/contracts/SecurePassphraseCheck.json";
+import { abi as prizeCreatorABI } from "../build/contracts/PrizeCreator.json";
 import HomePage from "./HomePage";
 import NewPage from "./NewPage";
 import QuestionPage from "./QuestionPage";
@@ -27,6 +28,10 @@ class App extends React.Component {
     this.spcContract = new this.web3.eth.Contract(
       spcContractABI,
       config.spcContractAddress
+    );
+    this.prizeCreator = new this.web3.eth.Contract(
+      prizeCreatorABI,
+      config.prizeCreatorAddress
     );
   }
 
@@ -81,6 +86,7 @@ class App extends React.Component {
                 {...props}
                 web3={this.web3}
                 spcContract={this.spcContract}
+                prizeCreator={this.prizeCreator}
                 account={this.state.account}
               />
             )}
@@ -92,6 +98,7 @@ class App extends React.Component {
                 {...props}
                 web3={this.web3}
                 spcContract={this.spcContract}
+                prizeCreator={this.prizeCreator}
                 account={this.state.account}
               />
             )}
