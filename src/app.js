@@ -86,7 +86,6 @@ class App extends React.Component {
                 {...props}
                 web3={this.web3}
                 spcContract={this.spcContract}
-                prizeCreator={this.prizeCreator}
                 account={this.state.account}
               />
             )}

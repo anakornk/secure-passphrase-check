@@ -9,9 +9,7 @@ class NewPage extends React.Component {
       max: 1,
       isMined: false,
       onClick: false,
-      addPrize: false,
-      prize: "eth",
-      erc20Address: ""
+      qId: -1
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -49,31 +47,9 @@ class NewPage extends React.Component {
       .send({ from: account })
       .then((receipt) => {
         console.log(receipt);
-        if(this.state.addPrize) {
-          if(this.state.prize == "eth") {
-            console.log("eth");
-            prizeCreator.methods.createETHPrize(0).send({from: account})
-            .then((receipt)=> {
-              this.setState({isMined: true, onClick: false});
-            })
-            .catch((err) => {
-              console.log(err);
-              // show error
-              this.setState({onClick: false});
-            });
-          } else if(this.state.prize == "erc20") {
-            console.log("Erc20");
-            prizeCreator.methods.createERC20Prize(0, this.state.erc20Address, "TATA").send({from: account})
-            .then((receipt)=> {
-              this.setState({isMined: true, onClick: false});
-            })
-            .catch((err) => {
-              console.log(err);
-              // show error
-              this.setState({onClick: false});
-            });
-          }
-        }
+        console.log(receipt.events.NewQuestion.returnValues);
+        let qId = receipt.events.NewQuestion.returnValues.qId;
+        this.setState({isMined: true, onClick: false, qId});
       })
       .catch(console.error);
   }
@@ -86,7 +62,7 @@ class NewPage extends React.Component {
     return (
       <div className="form-wrapper">
         { this.state.onClick && <div className="lds-dual-ring"></div> }
-        { this.state.isMined && <Redirect to="/me"/>}
+        { this.state.isMined && <Redirect to={`/questions/${this.state.qId}`}/>}
         <h1 className="center">New Question</h1>
         <form onSubmit={this.handleSubmit}>
           <label>
@@ -117,46 +93,6 @@ class NewPage extends React.Component {
               onChange={this.handleChange}
             />
           </label>
-          <label>
-            Add Prize:
-            <input
-              type="checkbox"
-              name="addPrize"
-              checked={this.state.addPrize}
-              onChange={this.handleChange} />
-          </label>
-          { this.state.addPrize && 
-            <div className="radio-group">
-              <label>
-                <input
-                  type="radio"
-                  name="prize"
-                  value="eth"
-                  checked={this.state.prize == "eth"}
-                  onChange={this.handleChange} />
-                  ETH
-              </label>
-              <div>
-                <label>
-                  <input
-                    type="radio"
-                    name="prize"
-                    value="erc20"
-                    checked={this.state.prize == "erc20"}
-                    onChange={this.handleChange} />
-                    ERC20
-                </label>
-                <label>
-                  <input
-                    type="input"
-                    name="erc20Address"
-                    placeholder="Contract Address e.g. 0x123456789"
-                    checked={this.state.erc20Address}
-                    onChange={this.handleChange} />
-                </label>
-              </div>
-            </div>
-          }
           <input type="submit" value="Submit" disabled={this.hasEmptyInput()} />
         </form>
       </div>

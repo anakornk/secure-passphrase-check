@@ -19,8 +19,8 @@ contract SecurePassphraseCheck {
     uint public numQuestions;
     mapping ( uint => Question ) questions;
     mapping( address => uint[] ) addressToQids;
-    //event NewQuestion(uint qId, address user);
-    //event CorrectAnswer(uint qId, address user);
+    event NewQuestion(uint qId, address user);
+    event CorrectAnswer(uint qId, address user);
 
 
     function getMyQuestions(address _address) public view returns (uint[] qids, bytes32[] questionsText) {
@@ -39,7 +39,7 @@ contract SecurePassphraseCheck {
         // check last param, gas
         questions[qId] = Question(_questionText, _answerAddress, _maxWinner, 0, new address[](0), msg.sender);
         addressToQids[msg.sender].push(qId);
-        // emit NewQuestion(qId, msg.sender);
+        emit NewQuestion(qId, msg.sender);
     }
 
     function getQuestion(uint _qId) public view returns (
@@ -72,7 +72,7 @@ contract SecurePassphraseCheck {
         question.numWinners = question.numWinners.add(1);
         question.winners.push(msg.sender);
         // should not allow duplicate winner
-        // emit CorrectAnswer(_qId, msg.sender);
+        emit CorrectAnswer(_qId, msg.sender);
     }
 
     function notFull(uint _qId) public view returns (bool){

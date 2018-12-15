@@ -33,7 +33,7 @@ class MePage extends React.Component {
     for (let i = qids.length - 1; i >= 0; i--) {
       let l = `/questions/${qids[i]}`;
       questions.push(
-        <Link to={l} className="card" key={i}>
+        <Link to={l} className="card card-zoom" key={i}>
           {qids[i]}. {this.props.web3.utils.toAscii(questionsText[i])}
         </Link>
       );
