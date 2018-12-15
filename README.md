@@ -12,7 +12,7 @@ export default config;
 
 ### Development
 npm install  
-add config.js
+add config.js  
 ganache-cli  
 npm run dev  
 truffe test
